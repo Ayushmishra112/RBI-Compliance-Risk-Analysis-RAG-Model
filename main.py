@@ -37,7 +37,10 @@ class SafeSubQuestionQueryEngine(SubQuestionQueryEngine):
         return super()._query_subq(sub_q, color=color)
 from llama_index.core.vector_stores.types import MetadataFilters, ExactMatchFilter
 from llama_index.core.question_gen import LLMQuestionGenerator
-from llama_parse import LlamaParse
+try:
+    from llama_parse import LlamaParse
+except RuntimeError:
+    LlamaParse = None
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -286,17 +289,20 @@ if SHOW_SIDEBAR:
         )
         
         if st.button("Extract & Index via LlamaParse"):
-            with st.spinner("Parsing PDFs into Markdown via LlamaCloud and indexing..."):
-                if uploaded_files:
-                    for uf in uploaded_files:
-                        with open(os.path.join(DIR_DATA, uf.name), "wb") as f:
-                            f.write(uf.read())
-                
-                success, msg = load_and_index_documents()
-                if success:
-                    st.success(msg)
-                else:
-                    st.warning(msg)
+            if not LlamaParse:
+                st.error("Document extraction is disabled on this server because it runs Python 3.14. Native database queries are fully functional though!")
+            else:
+                with st.spinner("Parsing PDFs into Markdown via LlamaCloud and indexing..."):
+                    if uploaded_files:
+                        for uf in uploaded_files:
+                            with open(os.path.join(DIR_DATA, uf.name), "wb") as f:
+                                f.write(uf.read())
+                    
+                    success, msg = load_and_index_documents()
+                    if success:
+                        st.success(msg)
+                    else:
+                        st.warning(msg)
 
 # Main Chat Interface
 if "messages" not in st.session_state:
