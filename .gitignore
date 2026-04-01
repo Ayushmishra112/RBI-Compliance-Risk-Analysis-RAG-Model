@@ -1,0 +1,16 @@
+# Python Virtual Environments
+env/
+venv/
+__pycache__/
+*.pyc
+
+# ⚠️ CRITICAL: Never upload your API Keys!
+.env
+.streamlit/secrets.toml
+
+# macOS/Windows system files
+.DS_Store
+Thumbs.db
+
+# NOTE: We are intentionally NOT ignoring `data/` or `chroma_db/` 
+# because we want to host the pre-computed database online!
