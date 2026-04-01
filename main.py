@@ -335,9 +335,20 @@ if prompt := st.chat_input("Ask a regulatory compliance query..."):
             st.error("Index not found. Please upload documents and click 'Extract & Index' first.")
             st.stop()
             
+        # Basic Conversational Interceptor for Non-RAG Queries
+        friendly_greetings = ["hi", "hello", "hey", "help", "who are you?", "what can you do?", "hi there", "sup"]
+        if prompt.strip().lower() in friendly_greetings:
+            st.success("👋 **Hello!** I am your focused **RBI Compliance & Risk AI**.\n\nI don't engage in generic small talk because my brain is 100% locked strictly to retrieving and comparing Reserve Bank of India documents! Please ask me a specific regulatory question, such as: *'How did the prepaid card guidelines change between 2017 and 2026?'*")
+            st.stop()
+            
         with st.spinner("Analyzing..."):
             response = engine.query(prompt)
             
+            # Handle strict RAG Empty Responses gracefully
+            if not response.response or str(response.response).strip() == "Empty Response":
+                st.warning("⚠️ **No Regulatory Context Found.** The underlying AI searched the ChromaDB vectors but could not find any explicit RBI mandates matching your query. Try rephrasing with specific banking terms!")
+                st.stop()
+                
             st.markdown(response.response)
             
             sources_data = []
