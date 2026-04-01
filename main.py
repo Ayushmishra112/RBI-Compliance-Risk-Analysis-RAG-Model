@@ -1,7 +1,6 @@
 import os
 import warnings
 warnings.filterwarnings("ignore", message=".*parsing_instruction is deprecated.*")
-os.environ["HF_HUB_OFFLINE"] = "1"
 import nest_asyncio
 try:
     nest_asyncio.apply()
