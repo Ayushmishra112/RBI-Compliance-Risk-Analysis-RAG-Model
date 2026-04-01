@@ -4,6 +4,7 @@ chromadb
 streamlit
 python-dotenv
 llama-index-llms-groq
-llama-index-embeddings-huggingface
+llama-index-embeddings-fastembed
+fastembed
 llama-parse
 pypdf

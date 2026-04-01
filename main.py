@@ -12,7 +12,7 @@ from llama_index.llms.groq import Groq
 
 # Configuration Flag for Sidebar
 SHOW_SIDEBAR = False
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.embeddings.fastembed import FastEmbedEmbedding
 from llama_index.core import (
     VectorStoreIndex,
     SimpleDirectoryReader,
@@ -70,7 +70,7 @@ if groq_key:
         )
     )
 
-Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
+Settings.embed_model = FastEmbedEmbedding(model_name="BAAI/bge-small-en-v1.5")
 Settings.chunk_size = 512
 Settings.chunk_overlap = 50
 
