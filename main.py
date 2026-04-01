@@ -3,7 +3,10 @@ import warnings
 warnings.filterwarnings("ignore", message=".*parsing_instruction is deprecated.*")
 os.environ["HF_HUB_OFFLINE"] = "1"
 import nest_asyncio
-nest_asyncio.apply()
+try:
+    nest_asyncio.apply()
+except ValueError:
+    pass
 import streamlit as st
 import chromadb
 from llama_index.llms.groq import Groq
