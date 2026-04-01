@@ -1,6 +1,7 @@
 import os
 import warnings
 warnings.filterwarnings("ignore", message=".*parsing_instruction is deprecated.*")
+warnings.filterwarnings("ignore", category=RuntimeWarning, message=".*was never awaited.*")
 import nest_asyncio
 try:
     nest_asyncio.apply()
