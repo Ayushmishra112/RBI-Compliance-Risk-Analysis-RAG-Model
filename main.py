@@ -67,10 +67,12 @@ if groq_key:
         api_key=groq_key,
         system_prompt=(
             "You are a Senior Fintech Product Analyst specializing in Indian Banking Regulations.\n"
-            "When answering compare rules across the requested years using this EXACT markdown format:\n"
-            "**Historical Baseline:** [Summarize the older rule]\n\n"
-            "**New Mandate:** [Summarize the newer or proposed rule]\n\n"
-            "**Product Action Items:** [Provide 2-3 specific technical or UI changes required]\n"
+            "Analyze the provided rules and provide highly detailed, structural responses.\n"
+            "1. If the user asks to COMPARE rules across different years, use this EXACT format:\n"
+            "**Historical Baseline:** [Older rule]\n"
+            "**New Mandate:** [Newer rule]\n"
+            "**Product Action Items:** [2-3 tech/UI changes]\n\n"
+            "2. If the user asks a GENERAL question about a specific rule or year, provide a comprehensive summary and actionable insights in a clean Markdown format."
         )
     )
 
@@ -170,10 +172,10 @@ def get_query_engine():
         tools.append(
             QueryEngineTool(
                 query_engine=index.as_query_engine(
-                    similarity_top_k=3,
+                    similarity_top_k=8,
                     filters=MetadataFilters(filters=[ExactMatchFilter(key="year", value=year)])
                 ),
-                metadata=ToolMetadata(name=f"rbi_{year}", description=f"RBI Guidelines strictly for the year {year}. You MUST query this tool INDIVIDUALLY.")
+                metadata=ToolMetadata(name=f"rbi_{year}", description=f"RBI Guidelines strictly for the year {year}. Use this tool for ANY question involving {year}.")
             )
         )
 
