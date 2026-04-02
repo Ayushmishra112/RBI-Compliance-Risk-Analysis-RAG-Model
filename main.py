@@ -149,42 +149,23 @@ def get_indexed_years():
 # 3. AGENTIC REASONING ENGINE SETUP
 # ==========================================
 def get_query_engine():
-    """Configures the SubQuestionQueryEngine targeting the grouped ChromaDB Index."""
-    db = chromadb.PersistentClient(path=DIR_CHROMA)
+    global index, DIR_CHROMA
     
-    try:
-        col = db.get_collection("rbi_compliance")
-    except Exception as e:
-        return None  # Collections might not exist yet
-        
-    vector_store = ChromaVectorStore(chroma_collection=col)
-    
-    # In LlamaIndex, recreating index from vector store without making a new one:
-    index = VectorStoreIndex.from_vector_store(vector_store)
-    
-    data = col.get()
-    unique_years = sorted(list(set(m.get("year") for m in data['metadatas'] if "year" in m)))
-    if not unique_years:
-        unique_years = [2017, 2026] # Fallback
+    if index is None:
+        if not os.path.exists(DIR_CHROMA):
+            return None
+        try:
+            db = chromadb.PersistentClient(path=DIR_CHROMA)
+            col = db.get_collection("rbi_compliance")
+            vector_store = ChromaVectorStore(chroma_collection=col)
+            index = VectorStoreIndex.from_vector_store(vector_store)
+        except Exception:
+            return None
 
-    tools = []
-    for year in unique_years:
-        tools.append(
-            QueryEngineTool(
-                query_engine=index.as_query_engine(
-                    similarity_top_k=3,
-                    filters=MetadataFilters(filters=[ExactMatchFilter(key="year", value=year)])
-                ),
-                metadata=ToolMetadata(name=f"rbi_{year}", description=f"RBI Guidelines strictly for the year {year}. Use this tool for ANY question involving {year}.")
-            )
-        )
-
-    smart_llm = Groq(model="llama-3.3-70b-versatile", api_key=groq_key)
-    query_engine = SafeSubQuestionQueryEngine.from_defaults(
-        query_engine_tools=tools,
-        llm=Settings.llm,
-        question_gen=LLMQuestionGenerator.from_defaults(llm=smart_llm),
-        use_async=False
+    # Use a unified global query engine rather than fragile sub-question multi-agent routers to bypass JSON hallucinations
+    query_engine = index.as_query_engine(
+        similarity_top_k=8,
+        llm=Settings.llm
     )
     
     return query_engine
