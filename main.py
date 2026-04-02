@@ -3,9 +3,11 @@ import warnings
 warnings.filterwarnings("ignore", message=".*parsing_instruction is deprecated.*")
 warnings.filterwarnings("ignore", category=RuntimeWarning, message=".*was never awaited.*")
 import nest_asyncio
+# Deep-patch to permanently bypass Python 3.14 ValueError crash on Streamlit Cloud
+nest_asyncio._patch_loop = lambda *args, **kwargs: None
 try:
     nest_asyncio.apply()
-except ValueError:
+except Exception:
     pass
 import streamlit as st
 import chromadb
