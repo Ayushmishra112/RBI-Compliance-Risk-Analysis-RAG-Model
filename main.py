@@ -172,7 +172,7 @@ def get_query_engine():
         tools.append(
             QueryEngineTool(
                 query_engine=index.as_query_engine(
-                    similarity_top_k=8,
+                    similarity_top_k=3,
                     filters=MetadataFilters(filters=[ExactMatchFilter(key="year", value=year)])
                 ),
                 metadata=ToolMetadata(name=f"rbi_{year}", description=f"RBI Guidelines strictly for the year {year}. Use this tool for ANY question involving {year}.")
