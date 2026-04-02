@@ -55,6 +55,7 @@ st.set_page_config(page_title="RBI Compliance & Risk Analysis RAG Model", layout
 
 DIR_DATA = "data"
 DIR_CHROMA = "chroma_db"
+index = None
 os.makedirs(DIR_DATA, exist_ok=True)
 os.makedirs(DIR_CHROMA, exist_ok=True)
 
