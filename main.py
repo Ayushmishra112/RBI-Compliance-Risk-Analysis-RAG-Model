@@ -179,10 +179,11 @@ def get_query_engine():
             )
         )
 
+    smart_llm = Groq(model="llama-3.3-70b-versatile", api_key=groq_key)
     query_engine = SafeSubQuestionQueryEngine.from_defaults(
         query_engine_tools=tools,
         llm=Settings.llm,
-        question_gen=LLMQuestionGenerator.from_defaults(llm=Settings.llm),
+        question_gen=LLMQuestionGenerator.from_defaults(llm=smart_llm),
         use_async=False
     )
     
