@@ -63,7 +63,7 @@ llama_cloud_key = os.environ.get("LLAMA_CLOUD_API_KEY")
 
 if groq_key:
     Settings.llm = Groq(
-        model="llama3-8b-8192", 
+        model="llama-3.1-8b-instant", 
         api_key=groq_key,
         system_prompt=(
             "You are a Senior Fintech Product Analyst specializing in Indian Banking Regulations.\n"
