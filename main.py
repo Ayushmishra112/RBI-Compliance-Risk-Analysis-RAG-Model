@@ -167,7 +167,7 @@ def get_query_engine():
 
     # Use a unified global query engine rather than fragile sub-question multi-agent routers to bypass JSON hallucinations
     query_engine = index.as_query_engine(
-        similarity_top_k=8,
+        similarity_top_k=5,
         llm=Settings.llm
     )
     
