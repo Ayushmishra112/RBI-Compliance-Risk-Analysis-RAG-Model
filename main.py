@@ -181,6 +181,7 @@ def get_query_engine():
 
     query_engine = SafeSubQuestionQueryEngine.from_defaults(
         query_engine_tools=tools,
+        llm=Settings.llm,
         question_gen=LLMQuestionGenerator.from_defaults(llm=Settings.llm),
         use_async=False
     )
